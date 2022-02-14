@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>MPU9250学习</title>
+    <url>/2022/02/14/MPU9250%E5%AD%A6%E4%B9%A0/</url>
+    <content><![CDATA[<h1 id="姿态融合还是DMP库？用实践告诉自己"><a href="#姿态融合还是DMP库？用实践告诉自己" class="headerlink" title="姿态融合还是DMP库？用实践告诉自己"></a>姿态融合还是DMP库？用实践告诉自己</h1><p>因为ICM20602缺少磁力计，而H车实现90度转向需要使用YAW角（偏航角）</p>
+]]></content>
+      <categories>
+        <category>我的智能车之路</category>
+      </categories>
+      <tags>
+        <tag>MPU9250</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>ROS工作空间</title>
     <url>/2022/02/14/ROS%E5%B7%A5%E4%BD%9C%E7%A9%BA%E9%97%B4/</url>
     <content><![CDATA[<h1 id="基础知识了解"><a href="#基础知识了解" class="headerlink" title="基础知识了解"></a>基础知识了解</h1><p><a href="http://www.autolabor.com.cn/book/ROSTutorials/chapter1.html">Autolabor-ROS机器人入门课程《ROS理论与实践》零基础教程</a><br><a href="https://www.bilibili.com/video/BV1Ci4y1L7ZZ?from=search&seid=8584940989733278262&spm_id_from=333.337.0.0">【奥特学园】ROS机器人入门课程《ROS理论与实践》零基础教程_哔哩哔哩_bilibili</a><br>（二者配合使用，效果极佳）</p>
@@ -28,14 +40,33 @@
       </categories>
   </entry>
   <entry>
-    <title>test</title>
-    <url>/2022/02/14/test/</url>
-    <content><![CDATA[<img src="/2022/02/14/test/image-20220214161125332.png" class="" title="image-20220214161125332">]]></content>
+    <title>机械臂moveit</title>
+    <url>/2022/02/14/%E6%9C%BA%E6%A2%B0%E8%87%82moveit/</url>
+    <content><![CDATA[<h1 id="从moveit可视化界面到代码编写"><a href="#从moveit可视化界面到代码编写" class="headerlink" title="从moveit可视化界面到代码编写"></a>从moveit可视化界面到代码编写</h1><p>老师交代的项目里面用到的是UR5机械臂，所以下面的例子引入采用UR5机械臂进行学习</p>
+<span id="more"></span>
+
+<h2 id="1-一些准备工作"><a href="#1-一些准备工作" class="headerlink" title="1.一些准备工作"></a>1.一些准备工作</h2><h3 id="1-1创建工作空间"><a href="#1-1创建工作空间" class="headerlink" title="1.1创建工作空间"></a>1.1创建工作空间</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$ </span><span class="language-bash"><span class="built_in">mkdir</span> -p ~/xxx/src   <span class="comment">#创建xxx文件夹，带个src目录，这就是最基础的工作空间了</span></span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash"><span class="built_in">cd</span> xxx/src          <span class="comment">#进入到创建的文件夹之中</span></span></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2导入UR5机械臂的github仓库和依赖包"><a href="#1-2导入UR5机械臂的github仓库和依赖包" class="headerlink" title="1.2导入UR5机械臂的github仓库和依赖包"></a>1.2导入UR5机械臂的github仓库和依赖包</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$ </span><span class="language-bash">git <span class="built_in">clone</span> -b melodic-devel https://github.com/ros-industrial/universal_robot.git</span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash"><span class="built_in">cd</span> ~/catkin_ws/</span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash">rosdep update</span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash">rosdep install --rosdistro melodic --ignore-src --from-paths src</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>若是出现克隆失败的问题，可以将<code>https</code>更换为<code>git</code></p>
+<p>若是出现rosdep的一些问题，网上有诸多方法，其实都比较麻烦，这边建议这样做</p>
+<p><a href="https://mp.weixin.qq.com/s?__biz=MzkzMzI2MTU2Nw==&mid=2247484207&idx=1&sn=e2762a8a9bf9c1a44fea4d365bfc9c2f&chksm=c24e7abff539f3a9d557d46188a6af3e2f385850c0df1721a9f8cb2ac90873e1f7353b9a1282&mpshare=1&scene=23&srcid=0214gCNTDruQ5elI2FTf8d5J&sharer_sharetime=1644849884091&sharer_shareid=50d696c2a10863243a2698b6536237b2#rd">rosdepc</a></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$ </span><span class="language-bash">sudo pip install rosdepc</span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash">sudo rosdepc init</span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash">rosdepc update</span></span><br></pre></td></tr></table></figure>
+
+<p>其中的一些安装问题根据报错提示<del>（应该都能解决）</del>（100%能解决，我没遇到过主要是）</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="language-bash">光下载了UR5的依赖包还不行，还需要下载他的驱动包</span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash">git <span class="built_in">clone</span> https://github.com/UniversalRobots/Universal_Robots_ROS_Driver.git src/Universal_Robots_ROS_Driver</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash"><span class="built_in">clone</span> fork of the description to use the calibration feature  <span class="comment"># -b表示下载分支</span></span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash">git <span class="built_in">clone</span> -b calibration_devel https://github.com/fmauch/universal_robot.git src/fmauch_universal_robot</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">安装依赖</span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash">sudo apt update -qq  <span class="comment"># -qq 不输出信息，错误除外</span></span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash">rosdep update</span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash">rosdep install --from-path src --ignore-src -y  <span class="comment">#-y 表示[yes/no]的问题选择yes</span></span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">编译工作空间</span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash">catkin_make</span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">设置环境变量</span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash"><span class="built_in">source</span> ./devel/setup.bash</span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash">roslaunch ur5_moveit_config demo.launch</span></span><br></pre></td></tr></table></figure>
+
+<p><code>roslaunch</code>会自动帮我们打开<code>roscore</code>，不需要我们手动开启</p>
+<p>&#x2F;———————————–以下Obsidian构建脑图所用，读者无须留意————————-&#x2F;</p>
+<p>[[ROS工作空间]]</p>
+<p>&#x2F;———————————–以上Obsidian构建脑图所用，读者无须留意————————&#x2F;</p>
+]]></content>
       <categories>
-        <category>test</category>
+        <category>ROS</category>
       </categories>
       <tags>
-        <tag>M</tag>
+        <tag>moveit</tag>
       </tags>
   </entry>
 </search>

@@ -18,7 +18,7 @@
     <content><![CDATA[<h1 id="基础知识了解"><a href="#基础知识了解" class="headerlink" title="基础知识了解"></a>基础知识了解</h1><p><a href="http://www.autolabor.com.cn/book/ROSTutorials/chapter1.html">Autolabor-ROS机器人入门课程《ROS理论与实践》零基础教程</a><br><a href="https://www.bilibili.com/video/BV1Ci4y1L7ZZ?from=search&seid=8584940989733278262&spm_id_from=333.337.0.0">【奥特学园】ROS机器人入门课程《ROS理论与实践》零基础教程_哔哩哔哩_bilibili</a><br>（二者配合使用，效果极佳）</p>
 <span id="more"></span>
 
-<h2 id="创建工作空间"><a href="#创建工作空间" class="headerlink" title="创建工作空间"></a>创建工作空间</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">liyufan@liyufan-virtual-machine:~$ mkdir -p ~/xxx/src    //其中xxx为你想创建的工作空间的名字，同时，src目录是必须的</span><br><span class="line">liyufan@liyufan-virtual-machine:~$ cd ~/xxx/src          //进入到src目录当中</span><br><span class="line">liyufan@liyufan-virtual-machine:~$ catkin_init_workspace //编译工作空间</span><br></pre></td></tr></table></figure>
+<h2 id="创建工作空间"><a href="#创建工作空间" class="headerlink" title="创建工作空间"></a>创建工作空间</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">liyufan@liyufan-virtual-machine:~$ mkdir -p ~/xxx/src    #其中xxx为你想创建的工作空间的名字，同时，src目录是必须的</span><br><span class="line">liyufan@liyufan-virtual-machine:~$ cd ~/xxx/src          #进入到src目录当中</span><br><span class="line">liyufan@liyufan-virtual-machine:~$ catkin_init_workspace #编译工作空间</span><br></pre></td></tr></table></figure>
 <p>创建好的工作空间如下，日后的学习需要在src目录下创建自己的“工作包”</p>
 <p>“工作包”如下：</p>
 <img src="/2022/02/14/ROS%E5%B7%A5%E4%BD%9C%E7%A9%BA%E9%97%B4/image-20220214204848505.png" class="" title="image-20220214204848505">

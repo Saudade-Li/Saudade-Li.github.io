@@ -23,33 +23,6 @@
       </tags>
   </entry>
   <entry>
-    <title>ROS工作空间</title>
-    <url>/2022/02/14/ROS%E5%B7%A5%E4%BD%9C%E7%A9%BA%E9%97%B4/</url>
-    <content><![CDATA[<h1 id="基础知识了解"><a href="#基础知识了解" class="headerlink" title="基础知识了解"></a>基础知识了解</h1><p><span class="exturl" data-url="aHR0cDovL3d3dy5hdXRvbGFib3IuY29tLmNuL2Jvb2svUk9TVHV0b3JpYWxzL2NoYXB0ZXIxLmh0bWw=">Autolabor-ROS机器人入门课程《ROS理论与实践》零基础教程<i class="fa fa-external-link-alt"></i></span><br><span class="exturl" data-url="aHR0cHM6Ly93d3cuYmlsaWJpbGkuY29tL3ZpZGVvL0JWMUNpNHkxTDdaWj9mcm9tPXNlYXJjaCZzZWlkPTg1ODQ5NDA5ODk3MzMyNzgyNjImc3BtX2lkX2Zyb209MzMzLjMzNy4wLjA=">【奥特学园】ROS机器人入门课程《ROS理论与实践》零基础教程_哔哩哔哩_bilibili<i class="fa fa-external-link-alt"></i></span><br>（二者配合使用，效果极佳）</p>
-<span id="more"></span>
-
-<h2 id="创建工作空间"><a href="#创建工作空间" class="headerlink" title="创建工作空间"></a>创建工作空间</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">liyufan@liyufan-virtual-machine:~$ mkdir -p ~/xxx/src    #其中xxx为你想创建的工作空间的名字，同时，src目录是必须的</span><br><span class="line">liyufan@liyufan-virtual-machine:~$ cd ~/xxx/src          #进入到src目录当中</span><br><span class="line">liyufan@liyufan-virtual-machine:~$ catkin_init_workspace #编译工作空间</span><br></pre></td></tr></table></figure>
-<p>创建好的工作空间如下，日后的学习需要在src目录下创建自己的“工作包”</p>
-<p>“工作包”如下：</p>
-<img src="/2022/02/14/ROS%E5%B7%A5%E4%BD%9C%E7%A9%BA%E9%97%B4/image-20220214204848505.png" class="" title="image-20220214204848505">
-
-<h2 id="为工作包添加依赖"><a href="#为工作包添加依赖" class="headerlink" title="为工作包添加依赖"></a>为工作包添加依赖</h2><p>1、总的包</p>
-<img src="/2022/02/14/ROS%E5%B7%A5%E4%BD%9C%E7%A9%BA%E9%97%B4/image-20220214205106351.png" class="" title="image-20220214205106351">
-<p>2、C++文件添加依赖</p>
-<img src="/2022/02/14/ROS%E5%B7%A5%E4%BD%9C%E7%A9%BA%E9%97%B4/image-20220214205205960.png" class="" title="image-20220214205205960">
-<p>3、Python文件添加依赖</p>
-<img src="/2022/02/14/ROS%E5%B7%A5%E4%BD%9C%E7%A9%BA%E9%97%B4/image-20220214205303728.png" class="" title="image-20220214205303728">
-
-<p>（很容易就看到哈！Python添加的东西就少了很多哇！在添加完所需要的依赖和需要编写的文件后，自己需要先编译一遍代码！不报错！这步工作才算完成！）</p>
-<p>注意：在我们编写Python文件时，需要给.py文件加上可执行权限</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">liyufan@liyufan-virtualmachine:~/Ros_projects/src/plubing_pub_sub/scripts$ chmod +x *.py</span><br><span class="line">liyufan@liyufan-virtualmachine:~/Ros_projects/src/plubing_pub_sub/scripts$ ll</span><br><span class="line">总用量 24</span><br><span class="line">drwxrwxr-x 2 liyufan liyufan 4096 12月  7 14:45 ./</span><br><span class="line">drwxrwxr-x 6 liyufan liyufan 4096 12月  6 12:08 ../</span><br><span class="line">-rwxrwxr-x 1 liyufan liyufan  695 12月  7 14:45 demo01_pub_person.py*</span><br><span class="line">-rwxrwxr-x 1 liyufan liyufan  427 12月  7 14:45 demo01_sub_person.py*</span><br><span class="line">-rwxrwxr-x 1 liyufan liyufan 1508 12月  6 12:08 demo_pub.py*</span><br><span class="line">-rwxrwxr-x 1 liyufan liyufan  954 12月  5 22:06 demo_sub.py*</span><br><span class="line">//这样则为.py文件添加上了可执行权限</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="上述内容完成后就可以在vscode中愉快的敲代码啦！！！"><a href="#上述内容完成后就可以在vscode中愉快的敲代码啦！！！" class="headerlink" title="上述内容完成后就可以在vscode中愉快的敲代码啦！！！"></a>上述内容完成后就可以在vscode中愉快的敲代码啦！！！</h3>]]></content>
-      <categories>
-        <category>ROS</category>
-      </categories>
-  </entry>
-  <entry>
     <title>机械臂moveit</title>
     <url>/2022/02/14/%E6%9C%BA%E6%A2%B0%E8%87%82moveit/</url>
     <content><![CDATA[<h1 id="从moveit可视化界面到代码编写"><a href="#从moveit可视化界面到代码编写" class="headerlink" title="从moveit可视化界面到代码编写"></a>从moveit可视化界面到代码编写</h1><p>老师交代的项目里面用到的是UR5机械臂，所以下面的例子引入采用UR5机械臂进行学习</p>
@@ -88,5 +61,32 @@
       <tags>
         <tag>moveit</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>ROS工作空间</title>
+    <url>/2022/02/14/ROS%E5%B7%A5%E4%BD%9C%E7%A9%BA%E9%97%B4/</url>
+    <content><![CDATA[<h1 id="基础知识了解"><a href="#基础知识了解" class="headerlink" title="基础知识了解"></a>基础知识了解</h1><p><span class="exturl" data-url="aHR0cDovL3d3dy5hdXRvbGFib3IuY29tLmNuL2Jvb2svUk9TVHV0b3JpYWxzL2NoYXB0ZXIxLmh0bWw=">Autolabor-ROS机器人入门课程《ROS理论与实践》零基础教程<i class="fa fa-external-link-alt"></i></span><br><span class="exturl" data-url="aHR0cHM6Ly93d3cuYmlsaWJpbGkuY29tL3ZpZGVvL0JWMUNpNHkxTDdaWj9mcm9tPXNlYXJjaCZzZWlkPTg1ODQ5NDA5ODk3MzMyNzgyNjImc3BtX2lkX2Zyb209MzMzLjMzNy4wLjA=">【奥特学园】ROS机器人入门课程《ROS理论与实践》零基础教程_哔哩哔哩_bilibili<i class="fa fa-external-link-alt"></i></span><br>（二者配合使用，效果极佳）</p>
+<span id="more"></span>
+
+<h2 id="创建工作空间"><a href="#创建工作空间" class="headerlink" title="创建工作空间"></a>创建工作空间</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">liyufan@liyufan-virtual-machine:~$ mkdir -p ~/xxx/src    #其中xxx为你想创建的工作空间的名字，同时，src目录是必须的</span><br><span class="line">liyufan@liyufan-virtual-machine:~$ cd ~/xxx/src          #进入到src目录当中</span><br><span class="line">liyufan@liyufan-virtual-machine:~$ catkin_init_workspace #编译工作空间</span><br></pre></td></tr></table></figure>
+<p>创建好的工作空间如下，日后的学习需要在src目录下创建自己的“工作包”</p>
+<p>“工作包”如下：</p>
+<img src="/2022/02/14/ROS%E5%B7%A5%E4%BD%9C%E7%A9%BA%E9%97%B4/image-20220214204848505.png" class="" title="image-20220214204848505">
+
+<h2 id="为工作包添加依赖"><a href="#为工作包添加依赖" class="headerlink" title="为工作包添加依赖"></a>为工作包添加依赖</h2><p>1、总的包</p>
+<img src="/2022/02/14/ROS%E5%B7%A5%E4%BD%9C%E7%A9%BA%E9%97%B4/image-20220214205106351.png" class="" title="image-20220214205106351">
+<p>2、C++文件添加依赖</p>
+<img src="/2022/02/14/ROS%E5%B7%A5%E4%BD%9C%E7%A9%BA%E9%97%B4/image-20220214205205960.png" class="" title="image-20220214205205960">
+<p>3、Python文件添加依赖</p>
+<img src="/2022/02/14/ROS%E5%B7%A5%E4%BD%9C%E7%A9%BA%E9%97%B4/image-20220214205303728.png" class="" title="image-20220214205303728">
+
+<p>（很容易就看到哈！Python添加的东西就少了很多哇！在添加完所需要的依赖和需要编写的文件后，自己需要先编译一遍代码！不报错！这步工作才算完成！）</p>
+<p>注意：在我们编写Python文件时，需要给.py文件加上可执行权限</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">liyufan@liyufan-virtualmachine:~/Ros_projects/src/plubing_pub_sub/scripts$ chmod +x *.py</span><br><span class="line">liyufan@liyufan-virtualmachine:~/Ros_projects/src/plubing_pub_sub/scripts$ ll</span><br><span class="line">总用量 24</span><br><span class="line">drwxrwxr-x 2 liyufan liyufan 4096 12月  7 14:45 ./</span><br><span class="line">drwxrwxr-x 6 liyufan liyufan 4096 12月  6 12:08 ../</span><br><span class="line">-rwxrwxr-x 1 liyufan liyufan  695 12月  7 14:45 demo01_pub_person.py*</span><br><span class="line">-rwxrwxr-x 1 liyufan liyufan  427 12月  7 14:45 demo01_sub_person.py*</span><br><span class="line">-rwxrwxr-x 1 liyufan liyufan 1508 12月  6 12:08 demo_pub.py*</span><br><span class="line">-rwxrwxr-x 1 liyufan liyufan  954 12月  5 22:06 demo_sub.py*</span><br><span class="line">//这样则为.py文件添加上了可执行权限</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="上述内容完成后就可以在vscode中愉快的敲代码啦！！！"><a href="#上述内容完成后就可以在vscode中愉快的敲代码啦！！！" class="headerlink" title="上述内容完成后就可以在vscode中愉快的敲代码啦！！！"></a>上述内容完成后就可以在vscode中愉快的敲代码啦！！！</h3>]]></content>
+      <categories>
+        <category>ROS</category>
+      </categories>
   </entry>
 </search>

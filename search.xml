@@ -31,28 +31,6 @@
       </tags>
   </entry>
   <entry>
-    <title>MPU9250学习</title>
-    <url>/2022/02/14/MPU9250%E5%AD%A6%E4%B9%A0/</url>
-    <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在学习ICM20602的姿态解算后，发现其偏航角（YAW角）会随时间而累加，这一点对于麦轮车的转向定点都是影响很大的，虽然还未返校，没有实际测试，但是能够预料到的不好的方面尽量早点解决。</p>
-<span id="more"></span>
-<h2 id="DMP库的解算"><a href="#DMP库的解算" class="headerlink" title="DMP库的解算"></a>DMP库的解算</h2><p>因为MPU6050可以使用DMP库进行解算，但其缺乏磁力计，并不能有效的去解决上述问题，于是采用MPU9250，<del>大家都是老古董了</del></p>
-<h3 id="1、从官网下载DMP的库"><a href="#1、从官网下载DMP的库" class="headerlink" title="1、从官网下载DMP的库"></a>1、从官网下载DMP的库</h3><p><span class="exturl" data-url="aHR0cHM6Ly9pbnZlbnNlbnNlLnRkay5jb20vZGV2ZWxvcGVycy9zb2Z0d2FyZS1kb3dubG9hZHMv">eMD 6.12官网下载<i class="fa fa-external-link-alt"></i></span></p>
-<img src="/2022/02/14/MPU9250%E5%AD%A6%E4%B9%A0/image-20220217225104602.png" class="" title="eMD库">
-<h3 id="2、移植DMP库到自己的单片机"><a href="#2、移植DMP库到自己的单片机" class="headerlink" title="2、移植DMP库到自己的单片机"></a>2、移植DMP库到自己的单片机</h3><p>移植过程，网上的教程一抓一大把，各有各的见解，在此不赘述<br><span class="exturl" data-url="aHR0cDovLzguMTM2Ljg0LjIyL2luZGV4LnBocC9hcmNoaXZlcy8xMTkv">记MPU6050模块的学习过程 - ZheWana’s<i class="fa fa-external-link-alt"></i></span>（一位大佬写的）</p>
-<h3 id="3、准备测试"><a href="#3、准备测试" class="headerlink" title="3、准备测试"></a>3、准备测试</h3><p>本人移植过程中采用逐飞库的模拟IIC，读者可自行选取<br>后在测试过程中，出现问题，关于FIFO溢出的问题<br>才疏学浅，对这方面实在了解太少，不能够在短时间内解决，所以在此挖个坑<br>遇到的问题：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *  @brief      Get one unparsed packet from the FIFO.</span></span><br><span class="line"><span class="comment"> *  This function should be used if the packet is to be parsed elsewhere.</span></span><br><span class="line"><span class="comment"> *  @param[in]  length  Length of one FIFO packet.</span></span><br><span class="line"><span class="comment"> *  @param[in]  data    FIFO packet.</span></span><br><span class="line"><span class="comment"> *  @param[in]  more    Number of remaining packets.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">mpu_read_fifo_stream</span><span class="params">(<span class="type">unsigned</span> <span class="type">short</span> length, <span class="type">unsigned</span> <span class="type">char</span> *data,</span></span><br><span class="line"><span class="params">                         <span class="type">unsigned</span> <span class="type">char</span> *more)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">char</span> tmp[<span class="number">2</span>];</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> fifo_count;</span><br><span class="line">    <span class="keyword">if</span> (!st.chip_cfg.dmp_on)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">if</span> (!st.chip_cfg.sensors)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (i2c_read(st.hw-&gt;addr, st.reg-&gt;fifo_count_h, <span class="number">2</span>, tmp))</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    fifo_count = (tmp[<span class="number">0</span>] &lt;&lt; <span class="number">8</span>) | tmp[<span class="number">1</span>];</span><br><span class="line">	<span class="comment">/***本人在此处遇到问题***/</span></span><br><span class="line">    <span class="keyword">if</span> (fifo_count &lt; length)</span><br><span class="line">    &#123;</span><br><span class="line">        </span><br><span class="line">        more[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">/***本人在此处遇到问题***/</span></span><br><span class="line">    <span class="keyword">if</span> (fifo_count &gt; (st.hw-&gt;max_fifo &gt;&gt; <span class="number">1</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">/* FIFO is 50% full, better check overflow bit. */</span></span><br><span class="line">        <span class="keyword">if</span> (i2c_read(st.hw-&gt;addr, st.reg-&gt;int_status, <span class="number">1</span>, tmp))</span><br><span class="line">            <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">        <span class="keyword">if</span> (tmp[<span class="number">0</span>] &amp; BIT_FIFO_OVERFLOW)</span><br><span class="line">        &#123;</span><br><span class="line">            mpu_reset_fifo();</span><br><span class="line">            <span class="keyword">return</span> <span class="number">-2</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (i2c_read(st.hw-&gt;addr, st.reg-&gt;fifo_r_w, length, data))</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    more[<span class="number">0</span>] = fifo_count / length - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>未能得到解决方案，怀疑是IIC的问题，也怀疑是采样率的问题，但也都没有深究下去，时间花的挺多了，咱总不能吊死在一颗树上</p>
-<h3 id="4、DMP方案是否可行？"><a href="#4、DMP方案是否可行？" class="headerlink" title="4、DMP方案是否可行？"></a>4、DMP方案是否可行？</h3><p>后来查阅手册，想获得准确的YAW角，应该使用的是<strong>MPL</strong>库，而MPL库仅支持到<strong>M4</strong>内核的单片机，我本次比赛所用的单片机为RT1064，内核是<strong>M7</strong>的，因此DMP解算实际上获得的数据仅使用了加速度计和陀螺仪，并不满足我的需求，遂放弃。但这个问题先留在这里，如果日后有空， 尝试解决。</p>
-<h2 id="姿态解算"><a href="#姿态解算" class="headerlink" title="姿态解算"></a>姿态解算</h2><p>姿态解</p>
-]]></content>
-      <categories>
-        <category>我的智能车之路</category>
-      </categories>
-      <tags>
-        <tag>MPU9250</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>机械臂moveit</title>
     <url>/2022/02/14/%E6%9C%BA%E6%A2%B0%E8%87%82moveit/</url>
     <content><![CDATA[<h1 id="从moveit可视化界面到代码编写"><a href="#从moveit可视化界面到代码编写" class="headerlink" title="从moveit可视化界面到代码编写"></a>从moveit可视化界面到代码编写</h1><p>老师交代的项目里面用到的是UR5机械臂，所以下面的例子引入采用UR5机械臂进行学习</p>
@@ -90,6 +68,46 @@
       </categories>
       <tags>
         <tag>moveit</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MPU9250学习</title>
+    <url>/2022/02/14/MPU9250%E5%AD%A6%E4%B9%A0/</url>
+    <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在学习ICM20602的姿态解算后，发现其偏航角（YAW角）会随时间而累加，这一点对于麦轮车的转向定点都是影响很大的，虽然还未返校，没有实际测试，但是能够预料到的不好的方面尽量早点解决。</p>
+<span id="more"></span>
+<h2 id="DMP库的解算"><a href="#DMP库的解算" class="headerlink" title="DMP库的解算"></a>DMP库的解算</h2><p>因为MPU6050可以使用DMP库进行解算，但其缺乏磁力计，并不能有效的去解决上述问题，于是采用MPU9250，<del>大家都是老古董了</del></p>
+<h3 id="1、从官网下载DMP的库"><a href="#1、从官网下载DMP的库" class="headerlink" title="1、从官网下载DMP的库"></a>1、从官网下载DMP的库</h3><p><span class="exturl" data-url="aHR0cHM6Ly9pbnZlbnNlbnNlLnRkay5jb20vZGV2ZWxvcGVycy9zb2Z0d2FyZS1kb3dubG9hZHMv">eMD 6.12官网下载<i class="fa fa-external-link-alt"></i></span></p>
+<img src="/2022/02/14/MPU9250%E5%AD%A6%E4%B9%A0/image-20220217225104602.png" class="" title="eMD库">
+<h3 id="2、移植DMP库到自己的单片机"><a href="#2、移植DMP库到自己的单片机" class="headerlink" title="2、移植DMP库到自己的单片机"></a>2、移植DMP库到自己的单片机</h3><p>移植过程，网上的教程一抓一大把，各有各的见解，在此不赘述<br><span class="exturl" data-url="aHR0cDovLzguMTM2Ljg0LjIyL2luZGV4LnBocC9hcmNoaXZlcy8xMTkv">记MPU6050模块的学习过程 - ZheWana’s<i class="fa fa-external-link-alt"></i></span>（一位大佬写的）</p>
+<h3 id="3、准备测试"><a href="#3、准备测试" class="headerlink" title="3、准备测试"></a>3、准备测试</h3><p>本人移植过程中采用逐飞库的模拟IIC，读者可自行选取<br>后在测试过程中，出现问题，关于FIFO溢出的问题<br>才疏学浅，对这方面实在了解太少，不能够在短时间内解决，所以在此挖个坑<br>遇到的问题：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *  @brief      Get one unparsed packet from the FIFO.</span></span><br><span class="line"><span class="comment"> *  This function should be used if the packet is to be parsed elsewhere.</span></span><br><span class="line"><span class="comment"> *  @param[in]  length  Length of one FIFO packet.</span></span><br><span class="line"><span class="comment"> *  @param[in]  data    FIFO packet.</span></span><br><span class="line"><span class="comment"> *  @param[in]  more    Number of remaining packets.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">mpu_read_fifo_stream</span><span class="params">(<span class="type">unsigned</span> <span class="type">short</span> length, <span class="type">unsigned</span> <span class="type">char</span> *data,</span></span><br><span class="line"><span class="params">                         <span class="type">unsigned</span> <span class="type">char</span> *more)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">char</span> tmp[<span class="number">2</span>];</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> fifo_count;</span><br><span class="line">    <span class="keyword">if</span> (!st.chip_cfg.dmp_on)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">if</span> (!st.chip_cfg.sensors)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (i2c_read(st.hw-&gt;addr, st.reg-&gt;fifo_count_h, <span class="number">2</span>, tmp))</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    fifo_count = (tmp[<span class="number">0</span>] &lt;&lt; <span class="number">8</span>) | tmp[<span class="number">1</span>];</span><br><span class="line">	<span class="comment">/***本人在此处遇到问题***/</span></span><br><span class="line">    <span class="keyword">if</span> (fifo_count &lt; length)</span><br><span class="line">    &#123;</span><br><span class="line">        </span><br><span class="line">        more[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">/***本人在此处遇到问题***/</span></span><br><span class="line">    <span class="keyword">if</span> (fifo_count &gt; (st.hw-&gt;max_fifo &gt;&gt; <span class="number">1</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">/* FIFO is 50% full, better check overflow bit. */</span></span><br><span class="line">        <span class="keyword">if</span> (i2c_read(st.hw-&gt;addr, st.reg-&gt;int_status, <span class="number">1</span>, tmp))</span><br><span class="line">            <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">        <span class="keyword">if</span> (tmp[<span class="number">0</span>] &amp; BIT_FIFO_OVERFLOW)</span><br><span class="line">        &#123;</span><br><span class="line">            mpu_reset_fifo();</span><br><span class="line">            <span class="keyword">return</span> <span class="number">-2</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (i2c_read(st.hw-&gt;addr, st.reg-&gt;fifo_r_w, length, data))</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    more[<span class="number">0</span>] = fifo_count / length - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>未能得到解决方案，怀疑是IIC的问题，也怀疑是采样率的问题，但也都没有深究下去，时间花的挺多了，咱总不能吊死在一颗树上</p>
+<h3 id="4、DMP方案是否可行？"><a href="#4、DMP方案是否可行？" class="headerlink" title="4、DMP方案是否可行？"></a>4、DMP方案是否可行？</h3><p>后来查阅手册，想获得准确的YAW角，应该使用的是<strong>MPL</strong>库，而MPL库仅支持到<strong>M4</strong>内核的单片机，我本次比赛所用的单片机为RT1064，内核是<strong>M7</strong>的，因此DMP解算实际上获得的数据仅使用了加速度计和陀螺仪，并不满足我的需求，遂放弃。但这个问题先留在这里，如果日后有空， 尝试解决。</p>
+<h2 id="姿态解算"><a href="#姿态解算" class="headerlink" title="姿态解算"></a>姿态解算</h2><p>姿态解</p>
+]]></content>
+      <categories>
+        <category>我的智能车之路</category>
+      </categories>
+      <tags>
+        <tag>MPU9250</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>记录个人微信公众号的开始</title>
+    <url>/2022/02/19/%E8%AE%B0%E5%BD%95%E4%B8%AA%E4%BA%BA%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E7%9A%84%E5%BC%80%E5%A7%8B/</url>
+    <content><![CDATA[<h1 id="瞎折腾"><a href="#瞎折腾" class="headerlink" title="瞎折腾"></a>瞎折腾</h1><p>在经历了Hexo的魔改和折磨后，发现自己的技能树确实有点歪的迹象，为防止这种现象继续往下延伸，遂在寒假结束之前进行一个结尾！<del>开始折腾微信公众号了……</del></p>
+<h2 id="坚持！还是坚持！"><a href="#坚持！还是坚持！" class="headerlink" title="坚持！还是坚持！"></a>坚持！还是坚持！</h2><img src="/2022/02/19/%E8%AE%B0%E5%BD%95%E4%B8%AA%E4%BA%BA%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E7%9A%84%E5%BC%80%E5%A7%8B/image-20220219174326515.png" class="" title="image-20220219174326515">
+
+<p>医学上管这个叫“生长痛”，在江苏语文卷的熏陶下，这种感觉常被我用到各种作文当中，用来比喻个人的成长！</p>
+<p>就像我在搭建博客之初，我想的是搭建好后的装逼，但在搭建的过程中学到的知识远比一个精美的博客来得快乐。</p>
+<p>可是博客搭建好后呢，我更专注于博客是否更加漂亮，而不是内容是否更加有意义。内容的创作需要投入更多的时间和更多的精力，显然，前期的准备工作我做的不错，但后面的坚持嘞，我是否能够保持固定的更新频率，把自己一段时间的所思所想和学习内容投放到上面呢？（<del>正经人谁写日记啊！</del>）</p>
+<p>2021年没做好记录，一年浑浑噩噩就过来了，感觉什么也没学会，什么也没弄明白，只知道，又一年过去，我又年长一岁，离进入社会又近一年……</p>
+<p>生活的激情似乎在我的身上慢慢流逝，困难的，挑战的……我还在感受吗？</p>
+<p>2022年，不求别的，只求自己的每一分成长能有所见证，有所记录，不应该停留在回忆之中，实实在在地写下来，实实在在地走下去！</p>
+<p>博客一周一更新，公众号也是如此（<del>FLAG立的有点快啊！</del>）</p>
+]]></content>
+      <tags>
+        <tag>微信公众号</tag>
       </tags>
   </entry>
 </search>

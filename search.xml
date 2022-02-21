@@ -31,46 +31,6 @@
       </tags>
   </entry>
   <entry>
-    <title>机械臂moveit</title>
-    <url>/2022/02/14/%E6%9C%BA%E6%A2%B0%E8%87%82moveit/</url>
-    <content><![CDATA[<h1 id="从moveit可视化界面到代码编写"><a href="#从moveit可视化界面到代码编写" class="headerlink" title="从moveit可视化界面到代码编写"></a>从moveit可视化界面到代码编写</h1><p>老师交代的项目里面用到的是UR5机械臂，所以下面的例子引入采用UR5机械臂进行学习</p>
-<span id="more"></span>
-
-<h2 id="1-一些准备工作"><a href="#1-一些准备工作" class="headerlink" title="1.一些准备工作"></a>1.一些准备工作</h2><h3 id="1-1创建工作空间"><a href="#1-1创建工作空间" class="headerlink" title="1.1创建工作空间"></a>1.1创建工作空间</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$ </span><span class="language-bash"><span class="built_in">mkdir</span> -p ~/xxx/src   <span class="comment">#创建xxx文件夹，带个src目录，这就是最基础的工作空间了</span></span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash"><span class="built_in">cd</span> xxx/src          <span class="comment">#进入到创建的文件夹之中</span></span></span><br></pre></td></tr></table></figure>
-
-<h3 id="1-2导入UR5机械臂的github仓库和依赖包"><a href="#1-2导入UR5机械臂的github仓库和依赖包" class="headerlink" title="1.2导入UR5机械臂的github仓库和依赖包"></a>1.2导入UR5机械臂的github仓库和依赖包</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$ </span><span class="language-bash">git <span class="built_in">clone</span> -b melodic-devel https://github.com/ros-industrial/universal_robot.git</span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash"><span class="built_in">cd</span> ~/catkin_ws/</span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash">rosdep update</span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash">rosdep install --rosdistro melodic --ignore-src --from-paths src</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>若是出现克隆失败的问题，可以将<code>https</code>更换为<code>git</code></p>
-<p>若是出现rosdep的一些问题，网上有诸多方法，其实都比较麻烦，这边建议这样做</p>
-<p><span class="exturl" data-url="aHR0cHM6Ly9tcC53ZWl4aW4ucXEuY29tL3M/X19iaXo9TXprek16STJNVFUyTnc9PSZtaWQ9MjI0NzQ4NDIwNyZpZHg9MSZzbj1lMjc2MmE4YTliZjljMWE0NGZlYTRkMzY1YmZjOWMyZiZjaGtzbT1jMjRlN2FiZmY1MzlmM2E5ZDU1N2Q0NjE4OGE2YWYzZTJmMzg1ODUwYzBkZjE3MjFhOWY4Y2IyYWM5MDg3M2UxZjczNTNiOWExMjgyJm1wc2hhcmU9MSZzY2VuZT0yMyZzcmNpZD0wMjE0Z0NOVERydVE1ZWxJMkZUZjhkNUomc2hhcmVyX3NoYXJldGltZT0xNjQ0ODQ5ODg0MDkxJnNoYXJlcl9zaGFyZWlkPTUwZDY5NmMyYTEwODYzMjQzYTI2OThiNjUzNjIzN2IyI3Jk">rosdepc<i class="fa fa-external-link-alt"></i></span></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$ </span><span class="language-bash">sudo pip install rosdepc</span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash">sudo rosdepc init</span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash">rosdepc update</span></span><br></pre></td></tr></table></figure>
-
-<p>其中的一些安装问题根据报错提示<del>（应该都能解决）</del>（100%能解决，我没遇到过主要是）</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="language-bash">光下载了UR5的依赖包还不行，还需要下载他的驱动包</span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash">git <span class="built_in">clone</span> https://github.com/UniversalRobots/Universal_Robots_ROS_Driver.git src/Universal_Robots_ROS_Driver</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash"><span class="built_in">clone</span> fork of the description to use the calibration feature  <span class="comment"># -b表示下载分支</span></span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash">git <span class="built_in">clone</span> -b calibration_devel https://github.com/fmauch/universal_robot.git src/fmauch_universal_robot</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">安装依赖</span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash">sudo apt update -qq  <span class="comment"># -qq 不输出信息，错误除外</span></span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash">rosdep update</span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash">rosdep install --from-path src --ignore-src -y  <span class="comment">#-y 表示[yes/no]的问题选择yes</span></span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">编译工作空间</span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash">catkin_make</span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">设置环境变量，在自己所创的工作空间内设置</span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash"><span class="built_in">source</span> devel/setup.bash</span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash">roslaunch ur5_moveit_config demo.launch</span></span><br></pre></td></tr></table></figure>
-
-<p><code>roslaunch</code>会自动帮我们打开<code>roscore</code>，不需要我们手动开启</p>
-<img src="/2022/02/14/%E6%9C%BA%E6%A2%B0%E8%87%82moveit/image-20220215130119831.png" class="" title="机械臂moveit">
-
-
-
-
-
-
-
-
-
-<p>&#x2F;———————————–以下Obsidian构建脑图所用，读者无须留意————————-&#x2F;</p>
-<p>[[ROS工作空间]]</p>
-<p>&#x2F;———————————–以上Obsidian构建脑图所用，读者无须留意————————&#x2F;</p>
-]]></content>
-      <categories>
-        <category>ROS</category>
-      </categories>
-      <tags>
-        <tag>moveit</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>MPU9250学习</title>
     <url>/2022/02/14/MPU9250%E5%AD%A6%E4%B9%A0/</url>
     <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在学习ICM20602的姿态解算后，发现其偏航角（YAW角）会随时间而累加，这一点对于麦轮车的转向定点都是影响很大的，虽然还未返校，没有实际测试，但是能够预料到的不好的方面尽量早点解决。</p>
@@ -93,9 +53,69 @@
       </tags>
   </entry>
   <entry>
+    <title>四元数和欧拉角</title>
+    <url>/2022/02/21/%E5%9B%9B%E5%85%83%E6%95%B0%E5%92%8C%E6%AC%A7%E6%8B%89%E8%A7%92/</url>
+    <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在前几日对于MPU9250的学习中，应用到了四元数和欧拉角这个概念，只知道两者可以互相转化，但不理解其内在逻辑，这不，ROS上又要用到了，再不了解可不行，得赶紧学起来了！</p>
+<h2 id="学习内容"><a href="#学习内容" class="headerlink" title="学习内容"></a>学习内容</h2><p><span class="exturl" data-url="aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3hpYW9tYV9iay9hcnRpY2xlL2RldGFpbHMvNzkwODI2Mjk=">四元数与欧拉角（Yaw、Pitch、Roll<i class="fa fa-external-link-alt"></i></span><br>先看上面这篇博客，做个总结，博客中有一些小错误，不必理会，重点理解第九点。</p>
+<h2 id="旋转矩阵到欧拉角"><a href="#旋转矩阵到欧拉角" class="headerlink" title="旋转矩阵到欧拉角"></a>旋转矩阵到欧拉角</h2><h3 id="外旋和内旋"><a href="#外旋和内旋" class="headerlink" title="外旋和内旋"></a>外旋和内旋</h3><p>定义{A}坐标系，{B}坐标系，初始位置{A},{B}重合<br>{A}作为参考坐标系，<strong>固定不动</strong><br>{B}作为运动坐标系，<strong>喜欢运动</strong></p>
+<h4 id="B绕A动–-gt-外旋"><a href="#B绕A动–-gt-外旋" class="headerlink" title="B绕A动–&gt;外旋"></a>B绕A动–&gt;外旋</h4><p>固定角（RPY）<br>计算方法：右乘法</p>
+<h4 id="B绕B动–-gt-内旋"><a href="#B绕B动–-gt-内旋" class="headerlink" title="B绕B动–&gt;内旋"></a>B绕B动–&gt;内旋</h4><p>欧拉角<br>计算方法：左乘法</p>
+<h2 id="万向锁"><a href="#万向锁" class="headerlink" title="万向锁"></a>万向锁</h2><p><span class="exturl" data-url="aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2Zlbmd5YTEvYXJ0aWNsZS9kZXRhaWxzLzUwNzIxNzY4">unity 旋转欧拉角 万向锁 解释_fengya1的专栏-CSDN博客_unity 万向锁<i class="fa fa-external-link-alt"></i></span><br>原本以为咱们不是通过旋转矩阵得到了欧拉角嘛，那为啥还要再去搞四元数嘞，<del>我直接一个滑铲不就搞定这破旋转了</del>,这就引出了万向锁的概念<br>上面的博客也很好的解释了为啥会出现万向锁<br>不理解？<br>再补一篇！<br><span class="exturl" data-url="aHR0cHM6Ly96aHVhbmxhbi56aGlodS5jb20vcC83OTg5NDk4Mg==">干货整理：欧拉角、旋转矩阵、四元数合辑 - 知乎 (zhihu.com)<i class="fa fa-external-link-alt"></i></span><br>既然欧拉角出了问题，那咱就用四元数来弥补这个不足！</p>
+<h2 id="旋转矩阵"><a href="#旋转矩阵" class="headerlink" title="旋转矩阵"></a>旋转矩阵</h2><p>emmmm这块其实我没有看太懂，所以在公式的推导方面也有些问题<br>总的来说，旋转矩阵就是不改变数值，是原始数据在旋转一定角度后的映射</p>
+<h2 id="四元数"><a href="#四元数" class="headerlink" title="四元数"></a>四元数</h2><img src="/2022/02/21/%E5%9B%9B%E5%85%83%E6%95%B0%E5%92%8C%E6%AC%A7%E6%8B%89%E8%A7%92/image-20220221211919550.png" class="" title="image-20220221211919550">
+<p>了解四元数是个常数加矢量就好<br>于是我们可以利用这个四元数表示旋转过的角度，也就是欧拉角<br>最后用四元数通过旋转矩阵（右乘法)算得相应的欧拉角<br>其实这个与绕哪一个轴进行旋转的现候顺序也有关系，但没有算过去证实</p>
+<h2 id="一个小总结"><a href="#一个小总结" class="headerlink" title="一个小总结"></a>一个小总结</h2><p>其实上面的博客里面写的内容都很详细，咱不能重复造轮子是吧，但是我觉得数学公式一定要自己去推导一遍，才能感觉到底哪里有问题，其实最后的推导我也有点小懒，没有认真的去推导，但是基本思路已经了解，后面的推导应该都是计算问题（<del>突然感觉这种思想好危险</del>）</p>
+]]></content>
+      <categories>
+        <category>基础数理知识</category>
+      </categories>
+      <tags>
+        <tag>MPU9250</tag>
+        <tag>moveit</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>机械臂moveit</title>
+    <url>/2022/02/14/%E6%9C%BA%E6%A2%B0%E8%87%82moveit/</url>
+    <content><![CDATA[<h1 id="从moveit可视化界面到代码编写"><a href="#从moveit可视化界面到代码编写" class="headerlink" title="从moveit可视化界面到代码编写"></a>从moveit可视化界面到代码编写</h1><p>老师交代的项目里面用到的是UR5机械臂，所以下面的例子引入采用UR5机械臂进行学习</p>
+<span id="more"></span>
+
+<h2 id="1-一些准备工作"><a href="#1-一些准备工作" class="headerlink" title="1.一些准备工作"></a>1.一些准备工作</h2><h3 id="1-1创建工作空间"><a href="#1-1创建工作空间" class="headerlink" title="1.1创建工作空间"></a>1.1创建工作空间</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$ </span><span class="language-bash"><span class="built_in">mkdir</span> -p ~/xxx/src   <span class="comment">#创建xxx文件夹，带个src目录，这就是最基础的工作空间了</span></span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash"><span class="built_in">cd</span> xxx/src          <span class="comment">#进入到创建的文件夹之中</span></span></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2导入UR5机械臂的github仓库和依赖包"><a href="#1-2导入UR5机械臂的github仓库和依赖包" class="headerlink" title="1.2导入UR5机械臂的github仓库和依赖包"></a>1.2导入UR5机械臂的github仓库和依赖包</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$ </span><span class="language-bash">git <span class="built_in">clone</span> -b melodic-devel https://github.com/ros-industrial/universal_robot.git</span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash"><span class="built_in">cd</span> ~/catkin_ws/</span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash">rosdep update</span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash">rosdep install --rosdistro melodic --ignore-src --from-paths src</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>若是出现克隆失败的问题，可以将<code>https</code>更换为<code>git</code></p>
+<p>若是出现rosdep的一些问题，网上有诸多方法，其实都比较麻烦，这边建议这样做</p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9tcC53ZWl4aW4ucXEuY29tL3M/X19iaXo9TXprek16STJNVFUyTnc9PSZtaWQ9MjI0NzQ4NDIwNyZpZHg9MSZzbj1lMjc2MmE4YTliZjljMWE0NGZlYTRkMzY1YmZjOWMyZiZjaGtzbT1jMjRlN2FiZmY1MzlmM2E5ZDU1N2Q0NjE4OGE2YWYzZTJmMzg1ODUwYzBkZjE3MjFhOWY4Y2IyYWM5MDg3M2UxZjczNTNiOWExMjgyJm1wc2hhcmU9MSZzY2VuZT0yMyZzcmNpZD0wMjE0Z0NOVERydVE1ZWxJMkZUZjhkNUomc2hhcmVyX3NoYXJldGltZT0xNjQ0ODQ5ODg0MDkxJnNoYXJlcl9zaGFyZWlkPTUwZDY5NmMyYTEwODYzMjQzYTI2OThiNjUzNjIzN2IyI3Jk">rosdepc<i class="fa fa-external-link-alt"></i></span></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$ </span><span class="language-bash">sudo pip install rosdepc</span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash">sudo rosdepc init</span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash">rosdepc update</span></span><br></pre></td></tr></table></figure>
+
+<p>其中的一些安装问题根据报错提示<del>（应该都能解决）</del>（100%能解决，我没遇到过主要是）</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="language-bash">光下载了UR5的依赖包还不行，还需要下载他的驱动包</span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash">git <span class="built_in">clone</span> https://github.com/UniversalRobots/Universal_Robots_ROS_Driver.git src/Universal_Robots_ROS_Driver</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash"><span class="built_in">clone</span> fork of the description to use the calibration feature  <span class="comment"># -b表示下载分支</span></span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash">git <span class="built_in">clone</span> -b calibration_devel https://github.com/fmauch/universal_robot.git src/fmauch_universal_robot</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">安装依赖</span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash">sudo apt update -qq  <span class="comment"># -qq 不输出信息，错误除外</span></span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash">rosdep update</span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash">rosdep install --from-path src --ignore-src -y  <span class="comment">#-y 表示[yes/no]的问题选择yes</span></span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">编译工作空间</span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash">catkin_make</span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">设置环境变量，在自己所创的工作空间内设置</span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash"><span class="built_in">source</span> devel/setup.bash</span></span><br><span class="line"><span class="meta">$ </span><span class="language-bash">roslaunch ur5_moveit_config demo.launch</span></span><br></pre></td></tr></table></figure>
+
+<p><code>roslaunch</code>会自动帮我们打开<code>roscore</code>，不需要我们手动开启</p>
+<img src="/2022/02/14/%E6%9C%BA%E6%A2%B0%E8%87%82moveit/image-20220215130119831.png" class="" title="机械臂moveit">
+
+<p>拖动顶部绿色小球移动，之后，我们就可以通过<code>Plan&amp;Execute</code>，让机械臂运动拖动位置处。有时候出现拖动后点击<code>Plan&amp;Execute</code>无法运动，多半是关节卡死了，机械臂无法运动到那个位置，或者说，是路径没有规划好，和咱脑子想让他运动的方式不太一样，经典脑子：我会了，手：不，你不会！</p>
+<p>这个时候，咱们发现moveit可视化界面上的按钮能做的就比较少了，咱要的是机械臂按照一定的规则进行运动，所以，下面就是撸代码阶段了！</p>
+<h2 id="2、撸代码！！！"><a href="#2、撸代码！！！" class="headerlink" title="2、撸代码！！！"></a>2、撸代码！！！</h2><h3 id="2-1-moveit的接口函数"><a href="#2-1-moveit的接口函数" class="headerlink" title="2.1 moveit的接口函数"></a>2.1 moveit的接口函数</h3><img src="/2022/02/14/%E6%9C%BA%E6%A2%B0%E8%87%82moveit/image-20220221155103062.png" class="" title="image-20220221155103062">
+
+<p>咱们就选择Python来写吧，<del>才不是因为C++配置的东西多</del></p>
+<p>&#x2F;———————————–以下Obsidian构建脑图所用，读者无须留意————————-&#x2F;</p>
+<p>[[ROS工作空间]]<br>[[四元数和欧拉角]]</p>
+<p>&#x2F;———————————–以上Obsidian构建脑图所用，读者无须留意————————&#x2F;</p>
+]]></content>
+      <categories>
+        <category>ROS</category>
+      </categories>
+      <tags>
+        <tag>moveit</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>记录个人微信公众号的开始</title>
     <url>/2022/02/19/%E8%AE%B0%E5%BD%95%E4%B8%AA%E4%BA%BA%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E7%9A%84%E5%BC%80%E5%A7%8B/</url>
     <content><![CDATA[<h1 id="瞎折腾"><a href="#瞎折腾" class="headerlink" title="瞎折腾"></a>瞎折腾</h1><p>在经历了Hexo的魔改和折磨后，发现自己的技能树确实有点歪的迹象，为防止这种现象继续往下延伸，遂在寒假结束之前进行一个结尾！<del>开始折腾微信公众号了……</del></p>
+<span id="more"></span>
 <h2 id="坚持！还是坚持！"><a href="#坚持！还是坚持！" class="headerlink" title="坚持！还是坚持！"></a>坚持！还是坚持！</h2><img src="/2022/02/19/%E8%AE%B0%E5%BD%95%E4%B8%AA%E4%BA%BA%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E7%9A%84%E5%BC%80%E5%A7%8B/image-20220219174326515.png" class="" title="image-20220219174326515">
 
 <p>医学上管这个叫“生长痛”，在江苏语文卷的熏陶下，这种感觉常被我用到各种作文当中，用来比喻个人的成长！</p>
@@ -106,6 +126,9 @@
 <p>2022年，不求别的，只求自己的每一分成长能有所见证，有所记录，不应该停留在回忆之中，实实在在地写下来，实实在在地走下去！</p>
 <p>博客一周一更新，公众号也是如此（<del>FLAG立的有点快啊！</del>）</p>
 ]]></content>
+      <categories>
+        <category>微信公众号的学习</category>
+      </categories>
       <tags>
         <tag>微信公众号</tag>
       </tags>

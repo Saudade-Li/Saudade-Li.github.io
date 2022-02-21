@@ -129,12 +129,12 @@
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">2</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">4</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">4</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">5</span></a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -194,6 +194,97 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://saudade-li.github.io/2022/02/21/%E5%9B%9B%E5%85%83%E6%95%B0%E5%92%8C%E6%AC%A7%E6%8B%89%E8%A7%92/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/%E5%A4%B4%E5%83%8F.jpg">
+      <meta itemprop="name" content="Saudade-Li">
+      <meta itemprop="description" content="等天亮">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Saudade-Li的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/02/21/%E5%9B%9B%E5%85%83%E6%95%B0%E5%92%8C%E6%AC%A7%E6%8B%89%E8%A7%92/" class="post-title-link" itemprop="url">四元数和欧拉角</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-02-21 16:37:52 / 修改时间：21:31:34" itemprop="dateCreated datePublished" datetime="2022-02-21T16:37:52+08:00">2022-02-21</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%9F%BA%E7%A1%80%E6%95%B0%E7%90%86%E7%9F%A5%E8%AF%86/" itemprop="url" rel="index"><span itemprop="name">基础数理知识</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>762</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在前几日对于MPU9250的学习中，应用到了四元数和欧拉角这个概念，只知道两者可以互相转化，但不理解其内在逻辑，这不，ROS上又要用到了，再不了解可不行，得赶紧学起来了！</p>
+<h2 id="学习内容"><a href="#学习内容" class="headerlink" title="学习内容"></a>学习内容</h2><p><span class="exturl" data-url="aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3hpYW9tYV9iay9hcnRpY2xlL2RldGFpbHMvNzkwODI2Mjk=">四元数与欧拉角（Yaw、Pitch、Roll<i class="fa fa-external-link-alt"></i></span><br>先看上面这篇博客，做个总结，博客中有一些小错误，不必理会，重点理解第九点。</p>
+<h2 id="旋转矩阵到欧拉角"><a href="#旋转矩阵到欧拉角" class="headerlink" title="旋转矩阵到欧拉角"></a>旋转矩阵到欧拉角</h2><h3 id="外旋和内旋"><a href="#外旋和内旋" class="headerlink" title="外旋和内旋"></a>外旋和内旋</h3><p>定义{A}坐标系，{B}坐标系，初始位置{A},{B}重合<br>{A}作为参考坐标系，<strong>固定不动</strong><br>{B}作为运动坐标系，<strong>喜欢运动</strong></p>
+<h4 id="B绕A动–-gt-外旋"><a href="#B绕A动–-gt-外旋" class="headerlink" title="B绕A动–&gt;外旋"></a>B绕A动–&gt;外旋</h4><p>固定角（RPY）<br>计算方法：右乘法</p>
+<h4 id="B绕B动–-gt-内旋"><a href="#B绕B动–-gt-内旋" class="headerlink" title="B绕B动–&gt;内旋"></a>B绕B动–&gt;内旋</h4><p>欧拉角<br>计算方法：左乘法</p>
+<h2 id="万向锁"><a href="#万向锁" class="headerlink" title="万向锁"></a>万向锁</h2><p><span class="exturl" data-url="aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2Zlbmd5YTEvYXJ0aWNsZS9kZXRhaWxzLzUwNzIxNzY4">unity 旋转欧拉角 万向锁 解释_fengya1的专栏-CSDN博客_unity 万向锁<i class="fa fa-external-link-alt"></i></span><br>原本以为咱们不是通过旋转矩阵得到了欧拉角嘛，那为啥还要再去搞四元数嘞，<del>我直接一个滑铲不就搞定这破旋转了</del>,这就引出了万向锁的概念<br>上面的博客也很好的解释了为啥会出现万向锁<br>不理解？<br>再补一篇！<br><span class="exturl" data-url="aHR0cHM6Ly96aHVhbmxhbi56aGlodS5jb20vcC83OTg5NDk4Mg==">干货整理：欧拉角、旋转矩阵、四元数合辑 - 知乎 (zhihu.com)<i class="fa fa-external-link-alt"></i></span><br>既然欧拉角出了问题，那咱就用四元数来弥补这个不足！</p>
+<h2 id="旋转矩阵"><a href="#旋转矩阵" class="headerlink" title="旋转矩阵"></a>旋转矩阵</h2><p>emmmm这块其实我没有看太懂，所以在公式的推导方面也有些问题<br>总的来说，旋转矩阵就是不改变数值，是原始数据在旋转一定角度后的映射</p>
+<h2 id="四元数"><a href="#四元数" class="headerlink" title="四元数"></a>四元数</h2><img src="/2022/02/21/%E5%9B%9B%E5%85%83%E6%95%B0%E5%92%8C%E6%AC%A7%E6%8B%89%E8%A7%92/image-20220221211919550.png" class="" title="image-20220221211919550">
+<p>了解四元数是个常数加矢量就好<br>于是我们可以利用这个四元数表示旋转过的角度，也就是欧拉角<br>最后用四元数通过旋转矩阵（右乘法)算得相应的欧拉角<br>其实这个与绕哪一个轴进行旋转的现候顺序也有关系，但没有算过去证实</p>
+<h2 id="一个小总结"><a href="#一个小总结" class="headerlink" title="一个小总结"></a>一个小总结</h2><p>其实上面的博客里面写的内容都很详细，咱不能重复造轮子是吧，但是我觉得数学公式一定要自己去推导一遍，才能感觉到底哪里有问题，其实最后的推导我也有点小懒，没有认真的去推导，但是基本思路已经了解，后面的推导应该都是计算问题（<del>突然感觉这种思想好危险</del>）</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://saudade-li.github.io/2022/02/19/%E8%AE%B0%E5%BD%95%E4%B8%AA%E4%BA%BA%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E7%9A%84%E5%BC%80%E5%A7%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -219,7 +310,16 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2022-02-19 17:37:34 / 修改时间：18:14:22" itemprop="dateCreated datePublished" datetime="2022-02-19T17:37:34+08:00">2022-02-19</time>
+              <time title="创建时间：2022-02-19 17:37:34 / 修改时间：22:18:44" itemprop="dateCreated datePublished" datetime="2022-02-19T17:37:34+08:00">2022-02-19</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E7%9A%84%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">微信公众号的学习</span></a>
+                </span>
             </span>
 
           
@@ -248,16 +348,14 @@
 
       
           <h1 id="瞎折腾"><a href="#瞎折腾" class="headerlink" title="瞎折腾"></a>瞎折腾</h1><p>在经历了Hexo的魔改和折磨后，发现自己的技能树确实有点歪的迹象，为防止这种现象继续往下延伸，遂在寒假结束之前进行一个结尾！<del>开始折腾微信公众号了……</del></p>
-<h2 id="坚持！还是坚持！"><a href="#坚持！还是坚持！" class="headerlink" title="坚持！还是坚持！"></a>坚持！还是坚持！</h2><img src="/2022/02/19/%E8%AE%B0%E5%BD%95%E4%B8%AA%E4%BA%BA%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E7%9A%84%E5%BC%80%E5%A7%8B/image-20220219174326515.png" class="" title="image-20220219174326515">
-
-<p>医学上管这个叫“生长痛”，在江苏语文卷的熏陶下，这种感觉常被我用到各种作文当中，用来比喻个人的成长！</p>
-<p>就像我在搭建博客之初，我想的是搭建好后的装逼，但在搭建的过程中学到的知识远比一个精美的博客来得快乐。</p>
-<p>可是博客搭建好后呢，我更专注于博客是否更加漂亮，而不是内容是否更加有意义。内容的创作需要投入更多的时间和更多的精力，显然，前期的准备工作我做的不错，但后面的坚持嘞，我是否能够保持固定的更新频率，把自己一段时间的所思所想和学习内容投放到上面呢？（<del>正经人谁写日记啊！</del>）</p>
-<p>2021年没做好记录，一年浑浑噩噩就过来了，感觉什么也没学会，什么也没弄明白，只知道，又一年过去，我又年长一岁，离进入社会又近一年……</p>
-<p>生活的激情似乎在我的身上慢慢流逝，困难的，挑战的……我还在感受吗？</p>
-<p>2022年，不求别的，只求自己的每一分成长能有所见证，有所记录，不应该停留在回忆之中，实实在在地写下来，实实在在地走下去！</p>
-<p>博客一周一更新，公众号也是如此（<del>FLAG立的有点快啊！</del>）</p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/02/19/%E8%AE%B0%E5%BD%95%E4%B8%AA%E4%BA%BA%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E7%9A%84%E5%BC%80%E5%A7%8B/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -307,7 +405,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-15 16:09:24" itemprop="dateModified" datetime="2022-02-15T16:09:24+08:00">2022-02-15</time>
+                <time title="修改时间：2022-02-21 16:42:22" itemprop="dateModified" datetime="2022-02-21T16:42:22+08:00">2022-02-21</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -325,7 +423,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>368</span>
+              <span>646</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -625,14 +723,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">5</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -663,7 +761,7 @@
             <h3 class="widget-title">Tag Cloud</h3>
             <div id="myCanvasContainer" class="widget tagcloud">
               <canvas width="250" height="250" id="resCanvas" style="width:100%">
-                    <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/MPU9250/" rel="tag">MPU9250</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cmake/" rel="tag">cmake</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/moveit/" rel="tag">moveit</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7/" rel="tag">微信公众号</a><span class="tag-list-count">1</span></li></ul>
+                    <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/MPU9250/" rel="tag">MPU9250</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cmake/" rel="tag">cmake</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/moveit/" rel="tag">moveit</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7/" rel="tag">微信公众号</a><span class="tag-list-count">1</span></li></ul>
               </canvas>
             </div>
         </div>
@@ -695,12 +793,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">2k</span>
+    <span title="站点总字数">3k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2 分钟</span>
+    <span title="站点阅读时长">3 分钟</span>
 </div>
   <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & <span class="exturl theme-link" data-url="aHR0cHM6Ly9taXN0LnRoZW1lLW5leHQub3Jn">NexT.Mist</span> 强力驱动
   </div>

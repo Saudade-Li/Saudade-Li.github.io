@@ -33,8 +33,9 @@
 <meta property="og:description" content="从moveit可视化界面到代码编写老师交代的项目里面用到的是UR5机械臂，所以下面的例子引入采用UR5机械臂进行学习">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://saudade-li.github.io/2022/02/14/%E6%9C%BA%E6%A2%B0%E8%87%82moveit/image-20220215130119831.png">
+<meta property="og:image" content="https://saudade-li.github.io/2022/02/14/%E6%9C%BA%E6%A2%B0%E8%87%82moveit/image-20220221155103062.png">
 <meta property="article:published_time" content="2022-02-14T13:10:30.000Z">
-<meta property="article:modified_time" content="2022-02-15T08:09:24.000Z">
+<meta property="article:modified_time" content="2022-02-21T08:42:22.000Z">
 <meta property="article:author" content="Saudade-Li">
 <meta property="article:tag" content="moveit">
 <meta name="twitter:card" content="summary">
@@ -134,12 +135,12 @@
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">2</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">4</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">4</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">5</span></a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -230,7 +231,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-15 16:09:24" itemprop="dateModified" datetime="2022-02-15T16:09:24+08:00">2022-02-15</time>
+                <time title="修改时间：2022-02-21 16:42:22" itemprop="dateModified" datetime="2022-02-21T16:42:22+08:00">2022-02-21</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -255,7 +256,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>368</span>
+              <span>646</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -292,16 +293,13 @@
 <p><code>roslaunch</code>会自动帮我们打开<code>roscore</code>，不需要我们手动开启</p>
 <img src="/2022/02/14/%E6%9C%BA%E6%A2%B0%E8%87%82moveit/image-20220215130119831.png" class="" title="机械臂moveit">
 
+<p>拖动顶部绿色小球移动，之后，我们就可以通过<code>Plan&amp;Execute</code>，让机械臂运动拖动位置处。有时候出现拖动后点击<code>Plan&amp;Execute</code>无法运动，多半是关节卡死了，机械臂无法运动到那个位置，或者说，是路径没有规划好，和咱脑子想让他运动的方式不太一样，经典脑子：我会了，手：不，你不会！</p>
+<p>这个时候，咱们发现moveit可视化界面上的按钮能做的就比较少了，咱要的是机械臂按照一定的规则进行运动，所以，下面就是撸代码阶段了！</p>
+<h2 id="2、撸代码！！！"><a href="#2、撸代码！！！" class="headerlink" title="2、撸代码！！！"></a>2、撸代码！！！</h2><h3 id="2-1-moveit的接口函数"><a href="#2-1-moveit的接口函数" class="headerlink" title="2.1 moveit的接口函数"></a>2.1 moveit的接口函数</h3><img src="/2022/02/14/%E6%9C%BA%E6%A2%B0%E8%87%82moveit/image-20220221155103062.png" class="" title="image-20220221155103062">
 
-
-
-
-
-
-
-
+<p>咱们就选择Python来写吧，<del>才不是因为C++配置的东西多</del></p>
 <p>&#x2F;———————————–以下Obsidian构建脑图所用，读者无须留意————————-&#x2F;</p>
-<p>[[ROS工作空间]]</p>
+<p>[[ROS工作空间]]<br>[[四元数和欧拉角]]</p>
 <p>&#x2F;———————————–以上Obsidian构建脑图所用，读者无须留意————————&#x2F;</p>
 
     </div>
@@ -404,7 +402,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%8Emoveit%E5%8F%AF%E8%A7%86%E5%8C%96%E7%95%8C%E9%9D%A2%E5%88%B0%E4%BB%A3%E7%A0%81%E7%BC%96%E5%86%99"><span class="nav-number">1.</span> <span class="nav-text">从moveit可视化界面到代码编写</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E4%B8%80%E4%BA%9B%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="nav-number">1.1.</span> <span class="nav-text">1.一些准备工作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1%E5%88%9B%E5%BB%BA%E5%B7%A5%E4%BD%9C%E7%A9%BA%E9%97%B4"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1创建工作空间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2%E5%AF%BC%E5%85%A5UR5%E6%9C%BA%E6%A2%B0%E8%87%82%E7%9A%84github%E4%BB%93%E5%BA%93%E5%92%8C%E4%BE%9D%E8%B5%96%E5%8C%85"><span class="nav-number">1.1.2.</span> <span class="nav-text">1.2导入UR5机械臂的github仓库和依赖包</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%8Emoveit%E5%8F%AF%E8%A7%86%E5%8C%96%E7%95%8C%E9%9D%A2%E5%88%B0%E4%BB%A3%E7%A0%81%E7%BC%96%E5%86%99"><span class="nav-number">1.</span> <span class="nav-text">从moveit可视化界面到代码编写</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E4%B8%80%E4%BA%9B%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="nav-number">1.1.</span> <span class="nav-text">1.一些准备工作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1%E5%88%9B%E5%BB%BA%E5%B7%A5%E4%BD%9C%E7%A9%BA%E9%97%B4"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1创建工作空间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2%E5%AF%BC%E5%85%A5UR5%E6%9C%BA%E6%A2%B0%E8%87%82%E7%9A%84github%E4%BB%93%E5%BA%93%E5%92%8C%E4%BE%9D%E8%B5%96%E5%8C%85"><span class="nav-number">1.1.2.</span> <span class="nav-text">1.2导入UR5机械臂的github仓库和依赖包</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E3%80%81%E6%92%B8%E4%BB%A3%E7%A0%81%EF%BC%81%EF%BC%81%EF%BC%81"><span class="nav-number">1.2.</span> <span class="nav-text">2、撸代码！！！</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-moveit%E7%9A%84%E6%8E%A5%E5%8F%A3%E5%87%BD%E6%95%B0"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 moveit的接口函数</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -420,14 +418,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">5</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -458,7 +456,7 @@
             <h3 class="widget-title">Tag Cloud</h3>
             <div id="myCanvasContainer" class="widget tagcloud">
               <canvas width="250" height="250" id="resCanvas" style="width:100%">
-                    <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/MPU9250/" rel="tag">MPU9250</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cmake/" rel="tag">cmake</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/moveit/" rel="tag">moveit</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7/" rel="tag">微信公众号</a><span class="tag-list-count">1</span></li></ul>
+                    <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/MPU9250/" rel="tag">MPU9250</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cmake/" rel="tag">cmake</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/moveit/" rel="tag">moveit</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7/" rel="tag">微信公众号</a><span class="tag-list-count">1</span></li></ul>
               </canvas>
             </div>
         </div>
@@ -490,12 +488,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">2k</span>
+    <span title="站点总字数">3k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2 分钟</span>
+    <span title="站点阅读时长">3 分钟</span>
 </div>
   <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & <span class="exturl theme-link" data-url="aHR0cHM6Ly9taXN0LnRoZW1lLW5leHQub3Jn">NexT.Mist</span> 强力驱动
   </div>
